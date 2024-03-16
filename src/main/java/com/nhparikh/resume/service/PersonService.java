@@ -1,4 +1,4 @@
-package com.nhparikh.resume;
+package com.nhparikh.resume.service;
 
 import com.nhparikh.resume.model.Person;
 

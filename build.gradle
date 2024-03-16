@@ -81,6 +81,7 @@ jacocoTestCoverageVerification {
 		rule {
 			enabled = true
 			element = 'CLASS'
+			includes = ['com.nhparikh.resume.*']
 			excludes = ['com.nhparikh.resume.NResumeApplication',
 						'com.nhparikh.resume.model.*',
 						'com.nhparikh.resume.configuration.*']

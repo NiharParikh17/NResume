@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'checkstyle'
 	id 'org.springframework.boot' version '3.2.3'
 	id 'io.spring.dependency-management' version '1.1.4'
@@ -59,6 +60,39 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jacoco {
+	reportsDirectory = layout.buildDirectory.dir('jacocoReportDir')
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		csv.required = true
+		html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = true
+			element = 'CLASS'
+			excludes = ['com.nhparikh.resume.NResumeApplication',
+						'com.nhparikh.resume.model.*',
+						'com.nhparikh.resume.configuration.*']
+			limit {
+				minimum = 0.9
+			}
+		}
+	}
+}
+
+tasks.register('applicationCodeCoverageReport', JacocoReport) {
+	executionData run
+	sourceSets sourceSets.main
 }
 
 tasks.withType(Checkstyle) {

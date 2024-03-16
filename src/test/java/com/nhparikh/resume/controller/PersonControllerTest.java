@@ -14,8 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,5 +55,49 @@ public class PersonControllerTest {
                 .andExpect(jsonPath("$.email").value("nihar17999@gmail.com"))
                 .andExpect(jsonPath("$.phone").value("1234567890"));
         verify(personService).addPerson(person);
+    }
+
+    @Test
+    public void addPersonTest_incorrectRequestEmail_failure() throws Exception {
+        // Given
+        String request = "{\"firstName\": \"Nihar\"," +
+                " \"email\": \"notavalidemail\"," +
+                " \"phone\": \"1234567890\"}";
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.post(URI)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+        // Then
+                .andExpect(status().isBadRequest());
+        verifyNoInteractions(personService);
+    }
+
+    @Test
+    public void addPersonTest_incorrectRequestPhone_failure() throws Exception {
+        // Given
+        String request = "{\"firstName\": \"Nihar\"," +
+                " \"email\": \"nihar17999@gmail.com\"," +
+                " \"phone\": \"123890\"}";
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.post(URI)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+        // Then
+                .andExpect(status().isBadRequest());
+        verifyNoInteractions(personService);
+    }
+
+    @Test
+    public void addPersonTest_incorrectRequestFirstName_failure() throws Exception {
+        // Given
+        String request = "{\"email\": \"nihar17999@gmail.com\"," +
+                " \"phone\": \"1234567890\"}";
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.post(URI)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+        // Then
+                .andExpect(status().isBadRequest());
+        verifyNoInteractions(personService);
     }
 }

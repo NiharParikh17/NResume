@@ -47,6 +47,7 @@ public class Person {
     private String email;
 
     @NotNull(message = "Phone cannot be null")
+    @Size(min = 10, message = "Phone number must be of size 10")
     @Pattern(regexp = PHONE_REGEX, message = "Not a valid phone number")
     @Schema(name = "phone", title = "Phone Number", example = "1234567890")
     private String phone;

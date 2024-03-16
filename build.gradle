@@ -45,6 +45,9 @@ dependencies {
 	// Swagger Documentation
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
 
+	// Mapstruct
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
 	// Tomcat
 	implementation 'org.apache.tomcat.embed:tomcat-embed-core'
 

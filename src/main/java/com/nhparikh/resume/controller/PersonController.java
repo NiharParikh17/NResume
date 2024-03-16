@@ -1,7 +1,6 @@
 package com.nhparikh.resume.controller;
 
-import com.nhparikh.resume.model.PersonRequest;
-import com.nhparikh.resume.model.PersonResponse;
+import com.nhparikh.resume.model.Person;
 import com.nhparikh.resume.service.PersonService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,11 +25,10 @@ public class PersonController {
     private final PersonService personService;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PersonResponse.class)))
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Person.class)))
     })
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<PersonResponse> addPerson(@RequestBody @Valid PersonRequest personRequest) {
-        personService.addPerson(personRequest);
-        return ResponseEntity.ok(null);
+    public ResponseEntity<Person> addPerson(@RequestBody @Valid Person person) {
+        return ResponseEntity.ok(personService.addPerson(person));
     }
 }

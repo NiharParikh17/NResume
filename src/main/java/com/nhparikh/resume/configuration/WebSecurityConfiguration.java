@@ -20,6 +20,7 @@ public class WebSecurityConfiguration {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
+                    authorizationManagerRequestMatcherRegistry.requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**").permitAll();
                     authorizationManagerRequestMatcherRegistry.requestMatchers(EndpointRequest.to("health")).permitAll();
                     authorizationManagerRequestMatcherRegistry.anyRequest().authenticated();
                 })

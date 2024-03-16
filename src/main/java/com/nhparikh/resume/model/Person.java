@@ -27,7 +27,7 @@ import static com.nhparikh.resume.factory.RegexFactory.PHONE_REGEX;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Schema(name = "Id", hidden = true)
+    @Schema(name = "id", title = "Identifier", accessMode = Schema.AccessMode.READ_ONLY, example = "0f2d25b0-48b2-4eec-8c96-a09e621782e7")
     private UUID id;
 
     @NotNull(message = "First name cannot be null")

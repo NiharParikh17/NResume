@@ -29,6 +29,7 @@ public class WebSecurityConfiguration {
                     authorizationManagerRequestMatcherRegistry.requestMatchers(EndpointRequest.to("health")).permitAll();
                     // API endpoints
                     authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.POST, "/person").permitAll();
+                    authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.DELETE, "/person/*").permitAll();
                     // Others
                     authorizationManagerRequestMatcherRegistry.anyRequest().authenticated();
                 })

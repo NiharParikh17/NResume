@@ -10,10 +10,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -30,5 +29,13 @@ public class PersonController {
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> addPerson(@RequestBody @Valid Person person) {
         return ResponseEntity.ok(personService.addPerson(person));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Person.class)))
+    })
+    @DeleteMapping(path = "/{uuid}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Person> removePerson(@PathVariable(value = "uuid") @Schema(requiredMode = Schema.RequiredMode.REQUIRED) UUID uuid) {
+        return ResponseEntity.ok(personService.removePerson(uuid));
     }
 }

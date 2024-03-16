@@ -42,6 +42,9 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 
+	// Tomcat
+	implementation 'org.apache.tomcat.embed:tomcat-embed-core'
+
 	// Test libraries
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'

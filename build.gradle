@@ -59,6 +59,7 @@ dependencies {
 }
 
 tasks.named('test') {
+	finalizedBy jacocoTestReport
 	useJUnitPlatform()
 }
 

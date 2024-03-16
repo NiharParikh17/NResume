@@ -23,20 +23,21 @@ import java.util.UUID;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Schema(name = "Id", hidden = true)
     private UUID id;
 
-    @Schema(name = "firstName", title = "First Name")
+    @Schema(name = "firstName", title = "First Name", example = "Nihar")
     @Size(min = 1, message = "First name must be at least of size 1")
     private String firstName;
 
-    @Schema(name = "lastName", title = "Last Name", nullable = true)
+    @Schema(name = "lastName", title = "Last Name", nullable = true, example = "Parikh")
     private String lastName;
 
-    @Schema(name = "middleName", title = "Middle Name", nullable = true)
+    @Schema(name = "middleName", title = "Middle Name", nullable = true, example = "H.")
     private String middleName;
 
     @Pattern(regexp = "", message = "Not a valid email")
-    @Schema(name = "email", title = "Email Address", example = "person.name@domain.com")
+    @Schema(name = "email", title = "Email Address", example = "nihar17999@gmail.com")
     private String email;
 
     @Pattern(regexp = "", message = "Not a valid phone number")

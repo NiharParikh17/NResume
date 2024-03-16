@@ -77,6 +77,8 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
+	enabled true
+	dependsOn jacocoTestReport
 	violationRules {
 		rule {
 			enabled = true

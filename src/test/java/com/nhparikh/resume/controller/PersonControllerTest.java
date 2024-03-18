@@ -1,5 +1,6 @@
 package com.nhparikh.resume.controller;
 
+import com.nhparikh.resume.handler.Handler;
 import com.nhparikh.resume.model.Person;
 import com.nhparikh.resume.service.PersonService;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -29,7 +32,9 @@ public class PersonControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(personController)
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(personController)
+                .setControllerAdvice(Handler.class)
                 .build();
     }
 
@@ -99,5 +104,25 @@ public class PersonControllerTest {
         // Then
                 .andExpect(status().isBadRequest());
         verifyNoInteractions(personService);
+    }
+
+    @Test
+    public void removePerson_success() throws Exception {
+        // Given
+        Person person = Person.builder().firstName("Nihar")
+                .email("nihar17999@gmail.com")
+                .phone("1234567890").build();
+        // When
+        when(personService.removePerson(any(UUID.class))).thenReturn(person);
+        mockMvc.perform(MockMvcRequestBuilders.delete(URI.concat("/").concat(UUID.randomUUID().toString()))
+                        .contentType(MediaType.APPLICATION_JSON))
+        // Then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Nihar"))
+                .andExpect(jsonPath("$.middleName").isEmpty())
+                .andExpect(jsonPath("$.lastName").isEmpty())
+                .andExpect(jsonPath("$.email").value("nihar17999@gmail.com"))
+                .andExpect(jsonPath("$.phone").value("1234567890"));
+        verify(personService).removePerson(any(UUID.class));
     }
 }

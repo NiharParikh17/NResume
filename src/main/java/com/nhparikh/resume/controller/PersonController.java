@@ -1,5 +1,6 @@
 package com.nhparikh.resume.controller;
 
+import com.nhparikh.resume.handler.NResumeErrorResponse;
 import com.nhparikh.resume.model.Person;
 import com.nhparikh.resume.service.PersonService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,7 +25,8 @@ public class PersonController {
     private final PersonService personService;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Person.class)))
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Person.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = @Content(schema = @Schema(implementation = NResumeErrorResponse.class)))
     })
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> addPerson(@RequestBody @Valid Person person) {
@@ -32,7 +34,9 @@ public class PersonController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Person.class)))
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Person.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = NResumeErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = @Content(schema = @Schema(implementation = NResumeErrorResponse.class)))
     })
     @DeleteMapping(path = "/{uuid}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> removePerson(@PathVariable(value = "uuid") @Schema(requiredMode = Schema.RequiredMode.REQUIRED) UUID uuid) {

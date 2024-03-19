@@ -1,11 +1,14 @@
 package com.nhparikh.resume.service;
 
+import com.nhparikh.resume.handler.NResumeException;
 import com.nhparikh.resume.model.Person;
 import com.nhparikh.resume.respository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+
+import static com.nhparikh.resume.handler.NResumeErrorCodes.NRESUME_ERR_NR_0001;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +50,7 @@ public class PersonServiceV1 implements PersonService {
         if (personToBeRemoved != null) {
             personRepository.deleteById(uuid);
         } else {
-            throw new RuntimeException("No person with that UUID exists");
+            throw new NResumeException(NRESUME_ERR_NR_0001);
         }
         return personToBeRemoved;
     }

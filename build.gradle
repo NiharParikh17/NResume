@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'checkstyle'
 	id 'org.springframework.boot' version '3.2.3'
 	id 'io.spring.dependency-management' version '1.1.4'
@@ -26,27 +27,36 @@ repositories {
 dependencies {
 	// Springframework
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
+	// Actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// Database
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 
 	// Swagger Documentation
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
 
+	// Mapstruct
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
 	// Tomcat
 	implementation 'org.apache.tomcat.embed:tomcat-embed-core'
+
+	// Logging
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth:3.1.11'
 
 	// Test libraries
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -55,7 +65,44 @@ dependencies {
 }
 
 tasks.named('test') {
+	finalizedBy jacocoTestReport
 	useJUnitPlatform()
+}
+
+jacoco {
+	reportsDirectory = layout.buildDirectory.dir('jacocoReportDir')
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		csv.required = true
+		html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+	}
+}
+
+jacocoTestCoverageVerification {
+	enabled true
+	dependsOn jacocoTestReport
+	violationRules {
+		rule {
+			enabled = true
+			element = 'CLASS'
+			includes = ['com.nhparikh.resume.*']
+			excludes = ['com.nhparikh.resume.NResumeApplication',
+						'com.nhparikh.resume.model.*',
+						'com.nhparikh.resume.configuration.*']
+			limit {
+				minimum = 0.9
+			}
+		}
+	}
+}
+
+tasks.register('applicationCodeCoverageReport', JacocoReport) {
+	executionData run
+	sourceSets sourceSets.main
 }
 
 tasks.withType(Checkstyle) {

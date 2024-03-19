@@ -138,4 +138,15 @@ public class PersonControllerTest {
                 .andExpect(status().isNotFound());
         verify(personService).removePerson(any(UUID.class));
     }
+
+    @Test
+    public void removePerson_anyOtherFailure_failure() throws Exception {
+        // Given & When
+        when(personService.removePerson(any(UUID.class))).thenThrow(new RuntimeException("OTHER EXCEPTION"));
+        mockMvc.perform(MockMvcRequestBuilders.delete(URI.concat("/").concat(UUID.randomUUID().toString()))
+                        .contentType(MediaType.APPLICATION_JSON))
+        // Then
+                .andExpect(status().isInternalServerError());
+        verify(personService).removePerson(any(UUID.class));
+    }
 }

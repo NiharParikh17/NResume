@@ -1,6 +1,8 @@
 package com.nhparikh.resume.controller;
 
 import com.nhparikh.resume.handler.Handler;
+import com.nhparikh.resume.handler.NResumeErrorCodes;
+import com.nhparikh.resume.handler.NResumeException;
 import com.nhparikh.resume.model.Person;
 import com.nhparikh.resume.service.PersonService;
 import org.junit.jupiter.api.BeforeEach;
@@ -123,6 +125,17 @@ public class PersonControllerTest {
                 .andExpect(jsonPath("$.lastName").isEmpty())
                 .andExpect(jsonPath("$.email").value("nihar17999@gmail.com"))
                 .andExpect(jsonPath("$.phone").value("1234567890"));
+        verify(personService).removePerson(any(UUID.class));
+    }
+
+    @Test
+    public void removePerson_noUUID_failure() throws Exception {
+        // Given & When
+        when(personService.removePerson(any(UUID.class))).thenThrow(new NResumeException(NResumeErrorCodes.NRESUME_ERR_NR_0001));
+        mockMvc.perform(MockMvcRequestBuilders.delete(URI.concat("/").concat(UUID.randomUUID().toString()))
+                        .contentType(MediaType.APPLICATION_JSON))
+        // Then
+                .andExpect(status().isNotFound());
         verify(personService).removePerson(any(UUID.class));
     }
 }
